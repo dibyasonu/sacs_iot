@@ -3,7 +3,11 @@ version: "2"
 networks:
   cs30:
     external: false
-
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1
+          
 services:
   server:
     image: gitea/gitea:latest
@@ -18,7 +22,8 @@ services:
 
     restart: always
     networks:
-      - cs30
+      cs30:
+        ipv4_address: 172.19.0.5
     volumes:
       - ./git_server:/data
     ports:
@@ -35,7 +40,8 @@ services:
       - MYSQL_PASSWORD=gitea
       - MYSQL_DATABASE=gitea
     networks:
-      - cs30
+      cs30:
+        ipv4_address: 172.19.0.6
     volumes:
       - ./mysql:/var/lib/mysql       
 
@@ -47,7 +53,8 @@ services:
 
     restart: always
     networks:
-      - cs30
+      cs30:
+        ipv4_address: 172.19.0.7
     volumes:
       - ./deploy/build_data:/var/build_dir/market
       - ./deploy/server_files:/var/www/html
