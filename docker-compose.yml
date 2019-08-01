@@ -46,7 +46,7 @@ services:
       - ./mysql:/var/lib/mysql       
 
   deploy_server:
-    image: sudosonu/sacs_iotd:v1.0
+    image: sudosonu/sacs_iotd:v1.1
     environment:
       - USER_UID=1000
       - USER_GID=1000
