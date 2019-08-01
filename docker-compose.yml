@@ -5,8 +5,8 @@ networks:
     external: false
     ipam:
       config:
-        - subnet: 172.19.0.0/16
-          gateway: 172.19.0.1
+        - subnet: ${SUBNET}
+          gateway: ${GATEWAY}
           
 services:
   server:
@@ -16,14 +16,14 @@ services:
       - USER_GID=1000
         - DB_TYPE=mysql
         - DB_HOST=db:3306
-        - DB_NAME=gitea
-        - DB_USER=gitea
-        - DB_PASSWD=gitea
+        - DB_NAME=${DB_NAME}
+        - DB_USER=${DB_USER}
+        - DB_PASSWD=${DB_PASSWD}
 
     restart: always
     networks:
       cs30:
-        ipv4_address: 172.19.0.5
+        ipv4_address: ${GITEA_IP}
     volumes:
       - ./git_server:/data
     ports:
@@ -35,13 +35,13 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=gitea
-      - MYSQL_USER=gitea
-      - MYSQL_PASSWORD=gitea
-      - MYSQL_DATABASE=gitea
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     networks:
       cs30:
-        ipv4_address: 172.19.0.6
+        ipv4_address: ${MYSQL_IP}
     volumes:
       - ./mysql:/var/lib/mysql       
 
@@ -54,7 +54,7 @@ services:
     restart: always
     networks:
       cs30:
-        ipv4_address: 172.19.0.7
+        ipv4_address: ${DEPLOY_IP}
     volumes:
       - ./deploy/build_data:/var/build_dir/market
       - ./deploy/server_files:/var/www/html

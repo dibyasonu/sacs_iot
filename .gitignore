@@ -1,0 +1,4 @@
+.env
+deploy/
+git_server/
+mysql/
