@@ -29,6 +29,8 @@ services:
     ports:
       - "5000:3000"
       - "222:22"
+    extra_hosts:
+      - "sacs.iotdeploy.com:${DEPLOY_IP}"
     depends_on:
        - db
   db:
@@ -43,10 +45,10 @@ services:
       cs30:
         ipv4_address: ${MYSQL_IP}
     volumes:
-      - ./mysql:/var/lib/mysql       
+      - ./mysql:/var/lib/mysql
 
   deploy_server:
-    image: sudosonu/sacs_iotd:v1.1
+    image: sudosonu/sacs_iotd:latest
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -56,8 +58,12 @@ services:
       cs30:
         ipv4_address: ${DEPLOY_IP}
     volumes:
-      - ./deploy/build_data:/var/build_dir/market
+      - ./deploy/factory/build_dir:/var/factory/build_dir
+      - ./deploy/factory/deploy_dir:/var/factory/deploy_dir
+      - ./deploy/factory/tasks_dir:/var/factory/tasks_dir
       - ./deploy/server_files:/var/www/html
     ports:
-      - "7000:80"
+      - "7000:7000"
+    expose:
+      - "80"
 
