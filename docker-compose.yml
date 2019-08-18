@@ -12,13 +12,11 @@ services:
   server:
     image: gitea/gitea:latest
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
-        - DB_TYPE=mysql
-        - DB_HOST=db:3306
-        - DB_NAME=${DB_NAME}
-        - DB_USER=${DB_USER}
-        - DB_PASSWD=${DB_PASSWD}
+      - DB_TYPE=mysql
+      - DB_HOST=db:3306
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWD=${DB_PASSWD}
 
     restart: always
     networks:
