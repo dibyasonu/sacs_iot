@@ -50,15 +50,15 @@ services:
     restart: always
     environment:
       - DRONE_GITEA_SERVER=http://13.233.97.9:5000/
-      - DRONE_SERVER_HOST=http://13.233.97.9:8000/
+      - DRONE_SERVER_HOST=13.233.97.9:8000  
       - DRONE_GIT_ALWAYS_AUTH=false
       - DRONE_RUNNER_CAPACITY=1
       - DRONE_LOGS_COLOR=true
       - DRONE_SERVER_PROTO=http
       - DRONE_TLS_AUTOCERT=false
       - DRONE_GITEA_SKIP_VERIFY=true
-      - DRONE_GITEA_CLIENT_ID=03c14492-0945-4a10-afb3-9137892b760d
-      - DRONE_GITEA_CLIENT_SECRET=DV30ml3kvp8vE2T54fnQU8kIBIIz3NWVHrQvneh54qA=
+      - DRONE_GITEA_CLIENT_ID=1787ab49-5897-4893-9735-49a9b2063928
+      - DRONE_GITEA_CLIENT_SECRET=bKTxa-2vZuY7BStYtpuAWaEFZu96vpNtSVfKjN1hId8=
     networks:
       cs30:
         ipv4_address: ${DEPLOY_IP} 
