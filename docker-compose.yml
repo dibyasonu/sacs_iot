@@ -3,13 +3,10 @@ version: "2"
 networks:
   cs30:
     external: false
-    ipam:
-      config:
-        - subnet: ${SUBNET}
-          gateway: ${GATEWAY}
           
 services:
-  server:
+
+  gitea-server:
     image: gitea/gitea:latest
     environment:
       - DB_TYPE=mysql
@@ -17,20 +14,17 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWD=${DB_PASSWD}
-
     restart: always
     networks:
-      cs30:
-        ipv4_address: ${GITEA_IP}
+      - cs30
     volumes:
       - ./git_server:/data
     ports:
       - "3000:3000"
       - "222:22"
-    extra_hosts:
-      - "sacs.iotdeploy.com:${DEPLOY_IP}"
     depends_on:
        - db
+
   db:
     image: mysql:5.7
     restart: always
@@ -40,16 +34,15 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     networks:
-      cs30:
-        ipv4_address: ${MYSQL_IP}
+      - cs30
     volumes:
       - ./mysql:/var/lib/mysql
 
   drone-server:
-    image: drone/drone
+    image: drone/drone:1.3.0
     restart: always
     environment:
-      - DRONE_GITEA_SERVER=http://server:3000
+      - DRONE_GITEA_SERVER=http://gitea-server:3000
       - DRONE_SERVER_HOST=drone-server 
       - DRONE_GIT_ALWAYS_AUTH=false
       - DRONE_RUNNER_CAPACITY=1
@@ -61,46 +54,11 @@ services:
       - DRONE_ADMIN=true
       - DRONE_USER_CREATE=username,admin:true  
     networks:
-      cs30:
-        ipv4_address: ${DEPLOY_IP} 
+      - cs30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./drone:/data    
     ports:        
       - "8000:80"
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-# 
-#  deploy_server:
-#    image: sudosonu/sacs_iotd:latest
-#    environment:
-#      - USER_UID=1000
-#      - USER_GID=1000
-#
-#    restart: always
-#    networks:
-#      cs30:
-#        ipv4_address: ${DEPLOY_IP}
-#    volumes:
-#      - ./deploy/factory/build_dir:/var/factory/build_dir
-#      - ./deploy/factory/deploy_dir:/var/factory/deploy_dir
-#      - ./deploy/factory/tasks_dir:/var/factory/tasks_dir
-#      - ./deploy/server_files:/var/www/html
-#    ports:
-#      - "7000:7000"
-#    expose:
-#      - "80"
-
+    depends_on:
+      - gitea-server
